@@ -1,9 +1,23 @@
+"use client";
+import Loader from "@/components/Loader";
+import { signIn, signOut, useSession } from "next-auth/react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { CiLock } from "react-icons/ci";
-import { FaLock } from "react-icons/fa";
+import { FaGoogle, FaLock } from "react-icons/fa";
 import { FiMail, FiLock, FiEye } from "react-icons/fi";
 
 const Login = () => {
+  const { data, status } = useSession();
+  const router = useRouter();
+  console.log(data, status);
+  if (status === "authenticated") {
+    router.push("/");
+  }
+  if (status === "loading") {
+    return <Loader />;
+  }
+
   return (
     <div className="flex items-center justify-center h-screen font-lato">
       <div className="login-box max-w-lg flex-col w-full min-h-[70%] p-16 shadow-xl bg-white border-solid border-[0px] border-black relative">
@@ -50,6 +64,16 @@ const Login = () => {
             Login
           </button>
         </form>
+        <div className="">
+          {/* Google Account login button */}
+          <button
+            onClick={() => signIn("google")}
+            className="w-full text-lg border border-black bg-white text-black p-2 hover:bg-black hover:text-white transition duration-300 ease-in-out mt-4"
+          >
+            <FaGoogle className="inline-block mr-2" />
+            Login with Google
+          </button>
+        </div>
         <div className="mt-4 text-center">
           <span className="text-gray-600 font-lato">
             Don't have an account?

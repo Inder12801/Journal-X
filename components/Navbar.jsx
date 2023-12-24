@@ -4,6 +4,9 @@ import React from "react";
 import { Lato } from "next/font/google";
 import { CiSearch } from "react-icons/ci";
 import { usePathname } from "next/navigation";
+import { signOut, useSession } from "next-auth/react";
+import Image from "next/image";
+import Loader from "./Loader";
 
 const lato = Lato({
   weight: ["100", "300", "400", "700"],
@@ -12,6 +15,11 @@ const lato = Lato({
 
 const Navbar = () => {
   const pathName = usePathname();
+  const { data, status } = useSession();
+  console.log(data?.user);
+  if (status === "loading") {
+    return <Loader />;
+  }
   return (
     <div
       className={`navbar lg:flex justify-between max-w-[90%] left-[5%]  ${
@@ -99,28 +107,61 @@ const Navbar = () => {
           My Blogs
         </Link>
         {/* auth buttons */}
-        <Link
-          href={"/auth/login"}
-          className={
-            `btn ${pathName !== "/" ? "text-black" : "text-white"} font-normal
-             bg-transparent  hover:bg-black hover:text-white hover:border-black text-lg rounded-none ` +
-            " " +
-            lato.className
-          }
+        <div
+          className={`${status !== "authenticated" ? "flex" : "hidden"} gap-3`}
         >
-          Login
-        </Link>
-        <Link
-          href={"/auth/signup"}
-          className={
-            `btn ${pathName !== "/" ? "text-black" : "text-white"} font-normal
+          <Link
+            href={"/auth/login"}
+            className={
+              `btn ${pathName !== "/" ? "text-black" : "text-white"} font-normal
              bg-transparent  hover:bg-black hover:text-white hover:border-black text-lg rounded-none ` +
-            " " +
-            lato.className
-          }
-        >
-          Signup
-        </Link>
+              " " +
+              lato.className
+            }
+          >
+            Login
+          </Link>
+          <Link
+            href={"/auth/signup"}
+            className={
+              `btn ${pathName !== "/" ? "text-black" : "text-white"} font-normal
+             bg-transparent  hover:bg-black hover:text-white hover:border-black text-lg rounded-none ` +
+              " " +
+              lato.className
+            }
+          >
+            Signup
+          </Link>
+        </div>
+        <div>
+          {status === "authenticated" ? (
+            <div className="dropdown dropdown-end">
+              <div tabIndex={0} role="button" className="w-10 m-1">
+                <div className="avatar">
+                  <div className="w-fit rounded-full">
+                    <img
+                      width={24}
+                      height={24}
+                      className="w-1"
+                      src={data?.user?.image}
+                      alt=""
+                    />
+                  </div>
+                </div>
+              </div>
+              <ul
+                tabIndex={0}
+                className="dropdown-content z-[1] menu p-2 shadow bg-white text-black rounded-none w-52"
+              >
+                <li className="btn font-lato p-0" onClick={() => signOut()}>
+                  Logout
+                </li>
+              </ul>
+            </div>
+          ) : (
+            ""
+          )}
+        </div>
       </div>
     </div>
   );
