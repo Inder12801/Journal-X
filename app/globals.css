@@ -14,23 +14,32 @@ html {
   scroll-behavior: smooth;
 }
 body {
-  background-color: #fff;
-  color: #000;
-  font-family: "Roboto", sans-serif;
+  /* background-color: #fff; */
+  /* color: #000; */
+  font-family: "Lato", sans-serif;
   line-height: 1.5;
   margin: 0;
   padding: 0;
+  /* position: ; */
 
-  -webkit-font-smoothing: antialiased;
+  /* -webkit-font-smoothing: antialiased; */
 }
 
 .hero-section {
-  position: relative;
   background-image: url("../public/hero-bg-image.jpg");
   background-size: 100vw 100vh;
   background-position: center;
   background-repeat: no-repeat;
-  z-index: 0;
+  z-index: 1;
+  object-fit: cover;
+  position: relative;
+}
+.hero-section:hover {
+  object-fit: cover;
+}
+
+::placeholder {
+  font-family: "Lato", sans-serif;
 }
 
 .hero-section::before {
@@ -41,5 +50,12 @@ body {
   bottom: 0;
   left: 0;
   background: linear-gradient(rgba(26, 26, 26, 0.5), rgba(31, 31, 31, 0.7));
-  z-index: 0; /* Adjust the z-index as needed */
+  z-index: 0;
+}
+
+/* write a media query for mobile devices */
+@media screen and (max-width: 800px) {
+  .navbar {
+    flex-direction: column;
+  }
 }
