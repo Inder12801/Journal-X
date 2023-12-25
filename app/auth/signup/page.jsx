@@ -1,32 +1,61 @@
+"use client";
 import Link from "next/link";
-import { CiLock } from "react-icons/ci";
-import { FiMail, FiLock, FiEye } from "react-icons/fi";
-import { IoMdLock } from "react-icons/io";
-import { FaLock } from "react-icons/fa";
 
+import { FaLock } from "react-icons/fa";
+import { useState } from "react";
+
+import { saveImageToCloudinary } from "@/utils/saveImageToCloudinary";
 const Signup = () => {
+  console.log(process.env.CLOUDINARY_CLOUD_NAME);
+  const [profilePicSelected, setProfilePicSelected] = useState(null);
+  const [formData, setFromData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    profilePic: "",
+  });
+  const handleImageUpload = async (pics) => {
+    console.log(pics);
+    const picUrl = await saveImageToCloudinary(pics);
+    setFromData({
+      ...formData,
+      profilePic: picUrl,
+    });
+  };
+  const handleOnChange = (e) => {
+    setFromData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+  const handleSubmit = (e) => {
+    console.log("uo");
+    e.preventDefault();
+    console.log(formData);
+  };
   return (
     <div className="flex items-center justify-center h-screen font-lato">
-      <div className="max-w-lg flex-col w-full min-h-1/2 p-16 shadow-xl bg-white border-solid border-[0px] border-black">
+      <div className="max-w-lg flex-col max-h-1/3 w-full p-12 shadow-xl bg-white border-solid border-[0px] border-black">
         <div className="flex-col items-center justify-center text-center">
           <FaLock className="text-4xl self-center m-auto bg-black text-white p-2 rounded-full" />
-          <h2 className="text-3xl font-extrabold mb-4 text-center  font-lato mt-2">
+          <h2 className="text-3xl font-extrabold mb-2 text-center  font-lato mt-2">
             Signup
           </h2>
         </div>
-        <form className="text-center">
+        <form className="text-center" onSubmit={handleSubmit}>
           <div className="mb-4 flex-col text-left font-lato">
             <label
               htmlFor="name"
               className="block text-gray-700 text-md font-bold mb-2 mr-2 font-lato"
             >
-              {/* <FiMail size={18} /> */}
               Name
             </label>
             <input
               type="text"
               id="name"
               name="name"
+              value={formData.name}
+              onChange={handleOnChange}
               className="w-full border text-lg border-gray-300 p-2 focus:outline-none focus:border-black font-lato"
               placeholder="Enter your name"
             />
@@ -36,13 +65,14 @@ const Signup = () => {
               htmlFor="email"
               className="block text-gray-700 text-md font-bold mb-2 mr-2 font-lato"
             >
-              {/* <FiMail size={18} /> */}
               Email
             </label>
             <input
               type="email"
               id="email"
               name="email"
+              value={formData.email}
+              onChange={handleOnChange}
               className="w-full border text-lg border-gray-300 p-2 focus:outline-none focus:border-black font-lato"
               placeholder="Enter your email"
             />
@@ -52,20 +82,57 @@ const Signup = () => {
               htmlFor="password"
               className="block text-gray-700 text-md font-bold mb-2 mr-2 font-lato"
             >
-              {/* <FiLock size={18} /> */}
               Password
             </label>
-            <div className=" flex items-center">
+            <div className="flex items-center">
               <input
                 type="password"
                 id="password"
                 name="password"
+                value={formData.password}
+                onChange={handleOnChange}
                 className="w-full border text-lg border-gray-300 p-2 focus:outline-none focus:border-black font-lato"
                 placeholder="Enter your password"
               />
             </div>
           </div>
-          <button className="w-full text-lg border border-black bg-white text-black p-2 hover:bg-black hover:text-white transition duration-300 ease-in-out">
+          <div className="mb-4 flex-col text-left font-lato">
+            <label
+              htmlFor="profilePic"
+              className="block text-gray-700 text-md font-bold mb-2 mr-2 font-lato"
+            >
+              <div className="avatar flex items-center gap-3">
+                <div className="w-16 rounded-full">
+                  <img
+                    src={
+                      profilePicSelected
+                        ? URL.createObjectURL(profilePicSelected)
+                        : "https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"
+                    }
+                  />
+                </div>
+                Choose Profile Pic
+              </div>
+            </label>
+            <div className="flex items-center">
+              <input
+                type="file"
+                id="profilePic"
+                name="profilePic"
+                className="file-input w-full max-w-xs hidden"
+                onChange={(e) => {
+                  setProfilePicSelected(e.target.files[0]);
+                  console.log(profilePicSelected);
+                  handleImageUpload(e.target.files[0]);
+                }}
+              />
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            className="w-full text-lg border border-black bg-white text-black p-2 hover:bg-black hover:text-white transition duration-300 ease-in-out"
+          >
             Signup
           </button>
         </form>
