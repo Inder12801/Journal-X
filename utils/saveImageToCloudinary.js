@@ -1,17 +1,21 @@
 export const saveImageToCloudinary = async (pics) => {
   const data = new FormData();
   data.append("file", pics);
-  data.append("upload_preset", process.env.CLOUDINARY_UPLOAD_PRESET);
-  data.append("cloud_name", process.env.CLOUDINARY_CLOUD_NAME);
+  data.append("upload_preset", "dabccp9iy");
+  data.append("cloud_name", "journal-x");
   console.log(process.env.CLOUDINARY_UPLOAD_PRESET);
   console.log(process.env.CLOUDINARY_CLOUD_NAME);
   console.log(process.env.CLOUDINARY_API_URL);
   try {
-    const res = await fetch(process.env.CLOUDINARY_API_URL, {
-      method: "POST",
-      body: data,
-    });
+    const res = await fetch(
+      "https://api.cloudinary.com/v1_1/dabccp9iy/image/upload",
+      {
+        method: "POST",
+        body: data,
+      }
+    );
     const cloudData = await res.json();
+    console.log(cloudData.url);
     const picUrl = await cloudData.url.toString();
     console.log(typeof picUrl);
     return picUrl;

@@ -5,8 +5,13 @@ import { FaLock } from "react-icons/fa";
 import { useState } from "react";
 
 import { saveImageToCloudinary } from "@/utils/saveImageToCloudinary";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { useAlertStyles } from "@chakra-ui/alert";
+import { useContextStates } from "@/provider/ContextProvider";
+import { useRouter } from "next/navigation";
 const Signup = () => {
-  console.log(process.env.CLOUDINARY_CLOUD_NAME);
+  // console.log(process.env.CLOUDINARY_CLOUD_NAME);
   const [profilePicSelected, setProfilePicSelected] = useState(null);
   const [formData, setFromData] = useState({
     name: "",
@@ -14,12 +19,15 @@ const Signup = () => {
     password: "",
     profilePic: "",
   });
+  const { user, setUser, theme, setTheme } = useContextStates();
+  const router = useRouter();
   const handleImageUpload = async (pics) => {
     console.log(pics);
-    const picUrl = await saveImageToCloudinary(pics);
+    // const picUrl = await saveImageToCloudinary(pics);
     setFromData({
       ...formData,
-      profilePic: picUrl,
+      profilePic:
+        "https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg",
     });
   };
   const handleOnChange = (e) => {
@@ -28,10 +36,28 @@ const Signup = () => {
       [e.target.name]: e.target.value,
     });
   };
-  const handleSubmit = (e) => {
-    console.log("uo");
+  const handleSubmit = async (e) => {
+    console.log("submit");
+    toast("Entered");
     e.preventDefault();
-    console.log(formData);
+    const { name, email, password, profilePic } = formData;
+    if (!name || !email || !password || !profilePic) {
+      toast("Please fill all the fields");
+      return;
+    }
+    try {
+      const res = await axios.post("/api/auth/signup", formData);
+      console.log(res);
+      if (res.data.error) {
+        toast(res.data.error);
+        return;
+      }
+      localStorage.setItem("user", JSON.stringify(res.data.data));
+      setUser(res.data.data);
+      router.push("/");
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <div className="flex items-center justify-center h-screen font-lato">

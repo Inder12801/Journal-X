@@ -1,8 +1,11 @@
 "use client";
 import Loader from "@/components/Loader";
+import { useContextStates } from "@/provider/ContextProvider";
+import axios from "axios";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { CiLock } from "react-icons/ci";
 import { FaGoogle, FaLock } from "react-icons/fa";
 import { FiMail, FiLock, FiEye } from "react-icons/fi";
@@ -10,13 +13,37 @@ import { FiMail, FiLock, FiEye } from "react-icons/fi";
 const Login = () => {
   const { data, status } = useSession();
   const router = useRouter();
+  const [formData, setFromData] = useState({
+    email: "",
+    password: "",
+  });
   console.log(data, status);
+  const { user, setUser } = useContextStates();
   if (status === "authenticated") {
     router.push("/");
   }
   if (status === "loading") {
     return <Loader />;
   }
+  const handleOnChange = (e) => {
+    setFromData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log(formData);
+    try {
+      const res = await axios.post("/api/auth/login", { ...formData });
+      console.log(res.data);
+      setUser(res.data.user);
+      localStorage.setItem("user", JSON.stringify(res.data.user));
+      router.push("/");
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className="flex items-center justify-center h-screen font-lato">
@@ -27,7 +54,7 @@ const Login = () => {
             Login
           </h2>
         </div>
-        <form className="text-center">
+        <form className="text-center" onSubmit={handleSubmit}>
           <div className="mb-4 flex-col text-left font-lato">
             <label
               htmlFor="email"
@@ -39,6 +66,8 @@ const Login = () => {
               type="email"
               id="email"
               name="email"
+              value={formData.email}
+              onChange={handleOnChange}
               className="w-full border text-lg border-gray-300 p-2 focus:outline-none focus:border-black font-lato"
               placeholder="Enter your email"
             />
@@ -55,12 +84,17 @@ const Login = () => {
                 type="password"
                 id="password"
                 name="password"
+                value={formData.password}
+                onChange={handleOnChange}
                 className="w-full border text-lg border-gray-300 p-2 focus:outline-none focus:border-black font-lato"
                 placeholder="Enter your password"
               />
             </div>
           </div>
-          <button className="w-full text-lg border border-black bg-white text-black p-2 hover:bg-black hover:text-white transition duration-300 ease-in-out">
+          <button
+            type="submit"
+            className="w-full text-lg border border-black bg-white text-black p-2 hover:bg-black hover:text-white transition duration-300 ease-in-out"
+          >
             Login
           </button>
         </form>

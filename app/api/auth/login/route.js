@@ -10,7 +10,7 @@ export async function POST(req, res) {
     if (!email || !password) {
       return NextResponse.json({ message: "Please fill all the fields" });
     }
-    const existedUser = await prisma.user.findUnique({
+    let existedUser = await prisma.user.findUnique({
       where: { email: email },
     });
     if (!existedUser) {
@@ -24,9 +24,10 @@ export async function POST(req, res) {
     }
 
     console.log(existedUser);
+    existedUser = { ...existedUser, token: generateJwtToken(email) };
 
     return NextResponse.json({
-      data: { ...existedUser, token: generateJwtToken(email) },
+      user: existedUser,
       status: 201,
     });
   } catch (error) {

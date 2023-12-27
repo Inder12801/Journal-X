@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Loader from "./Loader";
+import { useContextStates } from "@/provider/ContextProvider";
 
 const lato = Lato({
   weight: ["100", "300", "400", "700"],
@@ -14,12 +15,22 @@ const lato = Lato({
 });
 
 const Navbar = () => {
-  const pathName = usePathname();
+  let pathName = usePathname();
   const { data, status } = useSession();
-  console.log(data?.user);
+  // console.log(data?.user);
+  const { user } = useContextStates();
   if (status === "loading") {
     return <Loader />;
   }
+  console.log("user prodile pic : ", user?.profilePic);
+  if (user) {
+    pathName = "/";
+  }
+  const handleLogout = () => {
+    signOut();
+    localStorage.removeItem("user");
+    setUser(null);
+  };
   return (
     <div
       className={`navbar lg:flex justify-between max-w-[90%] left-[5%]  ${
@@ -107,9 +118,7 @@ const Navbar = () => {
           My Blogs
         </Link>
         {/* auth buttons */}
-        <div
-          className={`${status !== "authenticated" ? "flex" : "hidden"} gap-3`}
-        >
+        <div className={`${!user ? "flex" : "hidden"} gap-3`}>
           <Link
             href={"/auth/login"}
             className={
@@ -134,7 +143,7 @@ const Navbar = () => {
           </Link>
         </div>
         <div>
-          {status === "authenticated" ? (
+          {status === "authenticated" || user ? (
             <div className="dropdown dropdown-end">
               <div tabIndex={0} role="button" className="w-10 m-1">
                 <div className="avatar">
@@ -143,7 +152,7 @@ const Navbar = () => {
                       width={24}
                       height={24}
                       className="w-1"
-                      src={data?.user?.image}
+                      src={user?.profilePic}
                       alt=""
                     />
                   </div>
@@ -153,7 +162,7 @@ const Navbar = () => {
                 tabIndex={0}
                 className="dropdown-content z-[1] menu p-2 shadow bg-white text-black rounded-none w-52"
               >
-                <li className="btn font-lato p-0" onClick={() => signOut()}>
+                <li className="btn font-lato p-0" onClick={handleLogout}>
                   Logout
                 </li>
               </ul>
