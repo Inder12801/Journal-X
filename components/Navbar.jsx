@@ -8,6 +8,8 @@ import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Loader from "./Loader";
 import { useContextStates } from "@/provider/ContextProvider";
+import { useState } from "react";
+import { FiMenu } from "react-icons/fi";
 
 const lato = Lato({
   weight: ["100", "300", "400", "700"],
@@ -15,30 +17,27 @@ const lato = Lato({
 });
 
 const Navbar = () => {
-  let pathName = usePathname();
-  const { data, status } = useSession();
-  // console.log(data?.user);
+  const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { user } = useContextStates();
-  if (status === "loading") {
-    return <Loader />;
-  }
-  console.log("user prodile pic : ", user?.profilePic);
-  if (user) {
-    pathName = "/";
-  }
-  const handleLogout = () => {
-    signOut();
-    localStorage.removeItem("user");
-    setUser(null);
+
+  const toggleMobileMenu = () => {
+    setMobileMenuOpen(!isMobileMenuOpen);
   };
+
   return (
     <div
-      className={`navbar lg:flex justify-between max-w-[90%] left-[5%]  ${
-        pathName !== "/"
-          ? "bg-white text-black shadow-xl"
-          : "bg-transparent text-white"
-      } m-auto  absolute pt-2 z-10`}
+      className={`navbar sm:flex lg:flex justify-between max-w-[90%]   ${
+        usePathname() !== "/"
+          ? "bg-white text-black shadow-xl relative m-auto"
+          : "bg-transparent text-white absolute left-[5%]"
+      } m-auto  pt-2 z-10 transition-all duration-500 ease-in-out`}
     >
+      <div
+        className={`border-2 border-solid border-black p-1 cursor-pointer rounded-full bg-black text-white sm:inline md:hidden lg:hidden `}
+      >
+        <CiSearch className="text-md" fontSize={""} />
+      </div>
+
       {/* logo */}
       <div className="flex">
         <Link
@@ -50,25 +49,25 @@ const Navbar = () => {
       </div>
 
       {/* search bar */}
-      <div className="flex items-center gap-2">
+      <div className="flex search-bar items-center gap-2 min-w-[30%]">
         <input
           type="text"
           placeholder="Search a Blog"
           className={
-            ` min-w-[30vw] ${
-              pathName !== "/"
+            `w-full ${
+              usePathname() !== "/"
                 ? "bg-white text-black border border-black p-2 outline-offset-2 focus:outline-blackk placeholder:text-black"
                 : "bg-transparent border border-white p-2 outline-none focus:outline-white placeholder:text-white"
-            } from-inherit ` +
+            } from-inherit rounded-full ` +
             " " +
             lato.className
           }
         />
         <div
           className={`border-2 ${
-            pathName !== "/"
-              ? "border-solid border-black p-1 cursor-pointer"
-              : "border-solid border-white p-1 cursor-pointer"
+            usePathname() !== "/"
+              ? "border-solid border-black p-1 cursor-pointer rounded-full"
+              : "border-solid border-black p-1 cursor-pointer rounded-full bg-black text-white"
           } `}
         >
           <CiSearch className="" fontSize={"30px"} />
@@ -76,7 +75,11 @@ const Navbar = () => {
       </div>
 
       {/* navigation buttons */}
-      <div className="flex items-center gap-2">
+      <div
+        className={`lg:flex items-center gap-2 ${
+          isMobileMenuOpen ? "navlinks" : "hidden"
+        }`}
+      >
         <Link
           className={lato.className + " text-lg p-2 hover:text-slate-300 "}
           href={"/"}
@@ -113,17 +116,20 @@ const Navbar = () => {
         </Link>
         <Link
           className={lato.className + " text-lg  p-2  hover:text-slate-300 "}
-          href={"/myblogs"}
+          href={"/user/myblogs"}
         >
           My Blogs
         </Link>
+
         {/* auth buttons */}
         <div className={`${!user ? "flex" : "hidden"} gap-3`}>
           <Link
             href={"/auth/login"}
             className={
-              `btn ${pathName !== "/" ? "text-black" : "text-white"} font-normal
-             bg-transparent  hover:bg-black hover:text-white hover:border-black text-lg rounded-none ` +
+              `btn ${
+                usePathname() !== "/" ? "text-black" : "text-white"
+              } font-normal
+             bg-transparent  hover:bg-black hover:text-white hover:border-black text-lg rounded-full ` +
               " " +
               lato.className
             }
@@ -133,8 +139,10 @@ const Navbar = () => {
           <Link
             href={"/auth/signup"}
             className={
-              `btn ${pathName !== "/" ? "text-black" : "text-white"} font-normal
-             bg-transparent  hover:bg-black hover:text-white hover:border-black text-lg rounded-none ` +
+              `btn ${
+                usePathname() !== "/" ? "text-black" : "text-white"
+              } font-normal
+             bg-transparent  hover:bg-black hover:text-white hover:border-black text-lg rounded-full ` +
               " " +
               lato.className
             }
@@ -142,6 +150,7 @@ const Navbar = () => {
             Signup
           </Link>
         </div>
+
         <div>
           {status === "authenticated" || user ? (
             <div className="dropdown dropdown-end">
@@ -171,6 +180,14 @@ const Navbar = () => {
             ""
           )}
         </div>
+      </div>
+
+      {/* Mobile menu button */}
+      <div
+        className={`sm:inline md:inline-block lg:hidden z-40`}
+        onClick={toggleMobileMenu}
+      >
+        <FiMenu />
       </div>
     </div>
   );
