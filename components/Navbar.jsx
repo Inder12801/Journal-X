@@ -5,8 +5,6 @@ import { Lato } from "next/font/google";
 import { CiSearch } from "react-icons/ci";
 import { usePathname } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
-import Image from "next/image";
-import Loader from "./Loader";
 import { useContextStates } from "@/provider/ContextProvider";
 import { useState } from "react";
 import { FiMenu } from "react-icons/fi";

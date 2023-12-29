@@ -61,7 +61,7 @@ const Signup = () => {
   };
   return (
     <div className="flex items-center justify-center h-screen font-lato">
-      <div className="max-w-lg flex-col max-h-1/3 w-full p-12 shadow-xl bg-white border-solid border-[0px] border-black">
+      <div className="max-w-lg flex-col max-h-1/3 w-full p-12 shadow-xl bg-white border-solid border-[0px] border-black rounded-3xl">
         <div className="flex-col items-center justify-center text-center">
           <FaLock className="text-4xl self-center m-auto bg-black text-white p-2 rounded-full" />
           <h2 className="text-3xl font-extrabold mb-2 text-center  font-lato mt-2">
@@ -82,7 +82,7 @@ const Signup = () => {
               name="name"
               value={formData.name}
               onChange={handleOnChange}
-              className="w-full border text-lg border-gray-300 p-2 focus:outline-none focus:border-black font-lato"
+              className="w-full border text-lg border-gray-300 p-2 focus:outline-none focus:border-black font-lato rounded-lg"
               placeholder="Enter your name"
             />
           </div>
@@ -99,7 +99,7 @@ const Signup = () => {
               name="email"
               value={formData.email}
               onChange={handleOnChange}
-              className="w-full border text-lg border-gray-300 p-2 focus:outline-none focus:border-black font-lato"
+              className="w-full border text-lg border-gray-300 p-2 focus:outline-none focus:border-black font-lato rounded-lg"
               placeholder="Enter your email"
             />
           </div>
@@ -117,7 +117,7 @@ const Signup = () => {
                 name="password"
                 value={formData.password}
                 onChange={handleOnChange}
-                className="w-full border text-lg border-gray-300 p-2 focus:outline-none focus:border-black font-lato"
+                className="w-full border text-lg border-gray-300 p-2 focus:outline-none focus:border-black font-lato rounded-lg"
                 placeholder="Enter your password"
               />
             </div>
@@ -145,7 +145,7 @@ const Signup = () => {
                 type="file"
                 id="profilePic"
                 name="profilePic"
-                className="file-input w-full max-w-xs hidden"
+                className="file-input w-full max-w-xs hidden "
                 onChange={(e) => {
                   setProfilePicSelected(e.target.files[0]);
                   console.log(profilePicSelected);
@@ -157,7 +157,7 @@ const Signup = () => {
 
           <button
             type="submit"
-            className="w-full text-lg border border-black bg-white text-black p-2 hover:bg-black hover:text-white transition duration-300 ease-in-out"
+            className="w-full text-lg border border-black bg-white text-black p-2 hover:bg-black hover:text-white transition duration-300 ease-in-out rounded-lg"
           >
             Signup
           </button>

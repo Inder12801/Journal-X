@@ -23,7 +23,7 @@ export default function Home() {
           </p>
           <button
             className={
-              "btn bg-transparent text-white hover:bg-black hover:text-white hover:border-black text-xl rounded-none mt-4" +
+              "btn bg-transparent text-white hover:bg-black hover:text-white hover:border-black text-xl rounded-full mt-4" +
               " " +
               lato.className
             }
