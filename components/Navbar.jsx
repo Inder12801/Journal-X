@@ -18,10 +18,15 @@ const lato = Lato({
 
 const Navbar = () => {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { user } = useContextStates();
+  const { user, setUser } = useContextStates();
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!isMobileMenuOpen);
+  };
+  const handleLogout = () => {
+    signOut();
+    localStorage.removeItem("user");
+    setUser(null);
   };
 
   return (
