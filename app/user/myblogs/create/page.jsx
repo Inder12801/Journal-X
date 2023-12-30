@@ -1,9 +1,11 @@
 "use client";
 import { saveImageToCloudinary } from "@/utils/saveImageToCloudinary";
 import React, { useState } from "react";
+import { FaCross } from "react-icons/fa";
 import { IoIosAddCircle } from "react-icons/io";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.bubble.css";
+import { MdOutlineCancel } from "react-icons/md";
 
 const CreateBlog = () => {
   const [coverImage, setCoverImage] = useState(
@@ -67,7 +69,7 @@ const CreateBlog = () => {
           />
         </div>
         {/* Add image icon */}
-        <div className="m-4 ml-0">
+        <div className="m-4 ml-0 relative">
           <label htmlFor="coverImage">
             <IoIosAddCircle className="text-4xl ml-0" />
           </label>
@@ -86,10 +88,23 @@ const CreateBlog = () => {
           <div
             className={
               coverImage
-                ? "flex rounded-xl mt-4 ml-0 items-center justify-center"
+                ? "flex rounded-xl mt-4 ml-0 items-center justify-center "
                 : "hidden"
             }
           >
+            <MdOutlineCancel
+              className={`${
+                imageLoader ? "hidden" : "inline"
+              } text-2xl text-red-600 absolute top-2 right-2 cursor-pointer`}
+              onClick={() => {
+                setCoverImage(null);
+                setBlogDetails({ ...blogDetails, coverImage: "" });
+                localStorage.setItem(
+                  "blogDetails",
+                  JSON.stringify({ ...blogDetails, coverImage: "" })
+                );
+              }}
+            />
             {imageLoader ? (
               <span className="loading loading-spinner loading-lg"></span>
             ) : (
