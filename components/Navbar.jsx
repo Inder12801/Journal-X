@@ -155,7 +155,7 @@ const Navbar = () => {
         </div>
 
         <div>
-          {status === "authenticated" || user ? (
+          {user ? (
             <div className="dropdown dropdown-end">
               <div tabIndex={0} role="button" className="w-10 m-1">
                 <div className="avatar">

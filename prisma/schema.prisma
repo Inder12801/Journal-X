@@ -12,8 +12,10 @@ model Blog {
   slug     String    @unique
   title    String
   content     String
-  user   User      @relation(fields: [userId], references: [id])
-  userId String    @db.ObjectId
+  coverImage String?
+  user   User      @relation(fields: [userEmail], references: [email])
+  userEmail String    
+  category String
 }
 
 model User {
