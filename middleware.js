@@ -10,7 +10,7 @@ export const middleware = async (req, res) => {
 
     req.token = await token;
     const decodedToken = await jwt.verify(token, process.env.JWT_SECRET);
-    if()
+    // if()
   }
   if (req.nextUrl.pathname == "/user/myblogs") {
     console.log("middleware");

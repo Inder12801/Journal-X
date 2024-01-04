@@ -23,7 +23,7 @@ model User {
   email   String   @unique
   name    String
   password String
-  profilePic String @default("https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg")
+  profilePic String 
   blogs   Blog[]
 }
 

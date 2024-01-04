@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 import { useAlertStyles } from "@chakra-ui/alert";
 import { useContextStates } from "@/provider/ContextProvider";
 import { useRouter } from "next/navigation";
+import chooseImageIcon from "../../../public/chooseImageIcon.jpg";
 const Signup = () => {
   // console.log(process.env.CLOUDINARY_CLOUD_NAME);
   const [profilePicSelected, setProfilePicSelected] = useState(null);
