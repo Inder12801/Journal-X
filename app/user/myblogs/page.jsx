@@ -2,7 +2,7 @@
 import blogDummyData from "@/data/blogData";
 import { Lato } from "next/font/google";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CiSearch } from "react-icons/ci";
 import { FiArrowUpRight } from "react-icons/fi";
 
@@ -15,6 +15,13 @@ const Myblogs = () => {
   const pathName = "/myblogs";
   const router = useRouter();
   const [blogs, setBlogs] = useState(blogDummyData);
+  const [loggedInUser, setLoggedInUser] = useState(
+    JSON.parse(localStorage.getItem("user") || null)
+  );
+
+  useEffect(() => {
+    const token = loggedInUser.token;
+  }, [loggedInUser]);
   return (
     <div className="w-[90%] h-screen bg-white flex-col justify-center m-auto">
       <div className="m-auto w-full flex items-center justify-between gap-4 mt-8">
