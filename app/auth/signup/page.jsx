@@ -48,7 +48,7 @@ const Signup = () => {
     }
     try {
       const res = await axios.post("/api/auth/signup", formData);
-      console.log(res);
+      // console.log(res);
       if (res.data.error) {
         toast(res.data.error);
         return;

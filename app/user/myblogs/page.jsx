@@ -21,7 +21,24 @@ const Myblogs = () => {
 
   useEffect(() => {
     const token = loggedInUser.token;
-  }, [loggedInUser]);
+    console.log(token);
+    const fetchBlogs = async () => {
+      const response = await fetch("/api/user/myblogs", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await response.json();
+      console.log(data);
+      if (!response.ok) throw new Error(data.message);
+      else {
+        router.push("/user/myblogs");
+      }
+      setBlogs(data.blogs);
+    };
+    fetchBlogs();
+  }, []);
   return (
     <div className="w-[90%] h-screen bg-white flex-col justify-center m-auto">
       <div className="m-auto w-full flex items-center justify-between gap-4 mt-8">

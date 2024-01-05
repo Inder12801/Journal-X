@@ -17,7 +17,7 @@ const Login = () => {
     email: "",
     password: "",
   });
-  console.log(data, status);
+  // console.log(data, status);
   const { user, setUser } = useContextStates();
   if (status === "authenticated") {
     router.push("/");
