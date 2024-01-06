@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect } from "react";
 import { Lato } from "next/font/google";
 import { CiSearch } from "react-icons/ci";
 import { usePathname } from "next/navigation";
@@ -17,6 +17,7 @@ const lato = Lato({
 const Navbar = () => {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { user, setUser } = useContextStates();
+  const { data: session } = useSession();
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!isMobileMenuOpen);
@@ -26,6 +27,14 @@ const Navbar = () => {
     localStorage.removeItem("user");
     setUser(null);
   };
+  useEffect(() => {
+    if (session) {
+      console.log({ ...session.user });
+      setUser((prev) => {
+        return { ...prev, ...session.user };
+      });
+    }
+  }, [session]);
 
   return (
     <div

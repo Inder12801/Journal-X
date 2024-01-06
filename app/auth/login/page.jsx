@@ -17,7 +17,7 @@ const Login = () => {
     email: "",
     password: "",
   });
-  // console.log(data, status);
+  console.log(data, status);
   const { user, setUser } = useContextStates();
   if (status === "authenticated") {
     router.push("/");
@@ -30,6 +30,10 @@ const Login = () => {
       ...formData,
       [e.target.name]: e.target.value,
     });
+  };
+  const handleLoginIn = async () => {
+    console.log(await signIn("google"));
+    signIn("google");
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -101,7 +105,7 @@ const Login = () => {
         <div className="">
           {/* Google Account login button */}
           <button
-            onClick={() => signIn("google")}
+            onClick={() => handleLoginIn()}
             className="w-full text-lg border border-black bg-white text-black p-2 hover:bg-black hover:text-white transition duration-300 ease-in-out mt-4"
           >
             <FaGoogle className="inline-block mr-2" />
