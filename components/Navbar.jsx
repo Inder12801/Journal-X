@@ -173,7 +173,7 @@ const Navbar = () => {
                       width={24}
                       height={24}
                       className="w-1"
-                      src={user?.profilePic}
+                      src={user?.image}
                       alt=""
                     />
                   </div>

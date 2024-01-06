@@ -1,23 +1,15 @@
+import { connectToDB } from "@/utils/connectToDb";
 import prisma from "../prisma/index";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { getToken } from "next-auth/jwt";
 import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
+import User from "@/models/userModel";
+
 export const authOptions = {
   // adapter: PrismaAdapter(prisma),
-  // session: { strategy: "jwt" },
-  // jwt: {
-  //   secret: process.env.NEXTAUTH_SECRET,
-  //   encryption: true,
-  //   signingKey: process.env.NEXTAUTH_SECRET,
-  // },
-  // Configure one or more authentication providers
-  providers: [
-    // GithubProvider({
-    //   clientId: process.env.GITHUB_ID,
-    //   clientSecret: process.env.GITHUB_SECRET,
-    // }),
 
+  providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
@@ -33,48 +25,34 @@ export const authOptions = {
     }),
   ],
   // secret: process.env.NEXTAUTH_SECRET,
-  // callbacks: {
-  //   session: async (session, user) => {
-  //     // console.log("session : ", session);
-  //     // console.log({ user });
-  //     return session;
-  //   },
-  // jwt: async ({ token, user }) => {
-  //   console.log("token : ", token);
-  //   // const token = await getToken();
-  //   return { ...token };
-  // },
-  // signIn: async ({ session, user, account, profile, email, credentials }) => {
-  // console.log(user, profile, email, credentials);
-  // console.log("session : ", session);
-  // console.log("user : ", user);
-  // console.log("account : ", account);
-  // console.log("profile : ", profile);
-  // console.log("email : ", email);
-  // console.log("credentials : ", credentials);
-  // check if user already exists in db
+  callbacks: {
+    session: async ({ session }) => {
+      console.log("session : ", session);
+      // console.log({ user });
+      await connectToDB();
+      const sessionUser = await User.findOne({ email: session.user.email });
+      session.user.id = sessionUser._id;
+      return { session };
+    },
 
-  //     const existUser = await prisma.user.findUnique({
-  //       where: {
-  //         email: profile.email,
-  //       },
-  //     });
-  //     console.log(existUser);
-  //     if (!existUser) {
-  //       // // if not, create user
-  //       const newUser = await prisma.user.create({
-  //         data: {
-  //           email: profile.email,
-  //           name: profile.name,
-  //           profilePic: profile.profilePic,
-  //           id: profile.id,
-  //         },
-  //       });
-  //       console.log(newUser);
-  //     }
-
-  //     // return true to accept the login
-  //     return true;
-  //   },
-  // },
+    signIn: async ({ session, account, profile, email, credentials }) => {
+      try {
+        await connectToDB();
+        // check if user exists
+        let user = await User.findOne({
+          email: profile.email,
+        });
+        if (!user) {
+          user = await User.create({
+            name: profile.name,
+            email: profile.email,
+            profilePic: profile.picture,
+          });
+        }
+      } catch (error) {
+        console.error(error);
+      }
+      return true;
+    },
+  },
 };
